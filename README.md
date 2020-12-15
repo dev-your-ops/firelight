@@ -7,6 +7,7 @@ FireLight is a very simple and light database that allows you to share an object
 ### Install
 
 `yarn add @dev-your-ops/firelight`
+
 or
 
 `npm i @dev-your-ops/firelight`
@@ -18,6 +19,7 @@ By default, the database file is created at the root of the project with the nam
 `const db = require('@dev-your-ops/firelight')`
 
 > you can give a path as an option to store the db wherever you want :
+>
 > `const db = require('@dev-your-ops/firelight')('/tmp/db.json')`
 
 #### _get a ref_
@@ -29,6 +31,7 @@ By default, the database file is created at the root of the project with the nam
 #### _get ref data_
 
 You can access the data by using the association function.
+
 `const data = user.data()`
 
 #### _set data_
@@ -36,6 +39,7 @@ You can access the data by using the association function.
 `user.set({firstname: 'john'});`
 
 > if you pass true as the second argument, the new data and the old data will be merged together:
+>
 > `user.set({lastname: 'doe'}, true); // user.data() = {firstname: 'john', lastname: 'doe'}`
 
 #### _Example_
