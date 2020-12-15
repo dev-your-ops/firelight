@@ -7,12 +7,15 @@ FireLight is a very simple and light database that allows you to share an object
 ### Install
 
 `yarn add @dev-your-ops/firelight`
+
 or
+
 `npm i @dev-your-ops/firelight`
 
 ### Usage
 
 By default, the database file is created at the root of the project with the name "db.json".
+
 `const db = require('@dev-your-ops/firelight')`
 
 > you can give a path as an option to store the db wherever you want :
