@@ -7,7 +7,6 @@ FireLight is a very simple and light database that allows you to share an object
 ### Install
 
 `yarn add @dev-your-ops/firelight`
-
 or
 
 `npm i @dev-your-ops/firelight`
