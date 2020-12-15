@@ -54,13 +54,13 @@ You can access the data by using the association function.
     const user = db.ref('/user/1')
 
     // set user data
-    user.set({name: 'test'})
+    user.set({ name: 'test' })
 
     // update user data
-    user.set({tab: [1, 2, 3]}, true)
+    user.set({ tab: [1, 2, 3] }, true)
 
     console.log(user.data())
-    // => {name: 'test', tab: [1, 2, 3]}
+    // => { name: 'test', tab: [1, 2, 3] }
 
     // delete the user
     db.deleteRef(user.path)
