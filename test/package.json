@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "test": "node ./main.js"
+  },
+  "dependencies": {
+    "@dev-your-ops/firelight": "0.0.3"
+  }
+}
