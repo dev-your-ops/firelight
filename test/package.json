@@ -3,6 +3,6 @@
     "test": "node ./main.js"
   },
   "dependencies": {
-    "@dev-your-ops/firelight": "0.0.3"
+    "@dev-your-ops/firelight": "0.0.4"
   }
 }
