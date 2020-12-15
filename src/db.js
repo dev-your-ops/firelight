@@ -26,34 +26,45 @@ class Ref extends EventEmitter {
   }
 }
 
-module.exports = (dbPath = path.resolve('db.json')) =>
-  new (class db extends EventEmitter {
-    constructor() {
-      super();
-      try {
+module.exports = new (class db extends EventEmitter {
+  constructor() {
+    super();
+
+    this.dbPath = null;
+    this.data = {};
+  }
+
+  load(dbPath = path.resolve('db.json')) {
+    this.dbPath = dbPath;
+
+    try {
+      if (fs.existsSync(dbPath)) {
         this.data = JSON.parse(fs.readFileSync(dbPath));
-      } catch (e) {
-        console.error(e.message);
-        console.info(
-          'the database has not been found and will therefore be created at',
-          dbPath
-        );
-        this.data = {};
-        this.save();
       }
+    } catch (err) {
+      console.error(err.message);
+      console.info(
+        'the database has not been found and will therefore be created at',
+        dbPath
+      );
     }
+    this.emit('onload', this.data);
+    this.save();
+  }
 
-    save() {
-      fs.writeFileSync(dbPath, JSON.stringify(this.data, null, 2));
+  save() {
+    if (this.dbPath) {
+      fs.writeFileSync(this.dbPath, JSON.stringify(this.data, null, 2));
     }
+  }
 
-    ref(path) {
-      return new Ref(this, path).on('set', (e) => this.emit('set', e));
-    }
+  ref(path) {
+    return new Ref(this, path).on('set', (e) => this.emit('set', e));
+  }
 
-    deleteRef(path) {
-      delete this.data[path];
-      this.emit('delete', path);
-      this.save();
-    }
-  })();
+  deleteRef(path) {
+    delete this.data[path];
+    this.emit('delete', path);
+    this.save();
+  }
+})();

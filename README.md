@@ -16,11 +16,12 @@ or
 
 By default, the database file is created at the root of the project with the name "db.json".
 
-`const db = require('@dev-your-ops/firelight')`
+    const db = require('@dev-your-ops/firelight')
+    db.load()
 
 > you can give a path as an option to store the db wherever you want :
 >
-> `const db = require('@dev-your-ops/firelight')('/tmp/db.json')`
+> `db.load('/tmp/db.json')`
 
 #### _get a ref_
 
@@ -45,8 +46,10 @@ You can access the data by using the association function.
 #### _Example_
 
     const db = require('@dev-your-ops/firelight')
+    db.load()
 
     // subsribe to change
+    db.on('onload', (e) => console.log('onload:', e));
     db.on('set', (e) => console.log('set:', e));
     db.on('delete', (e) => console.log('delete:', e));
 
@@ -98,6 +101,9 @@ the **ref** object:
 ## Events
 
 you can subsribe to db event to know whats happened with the data and share it between other process
+
+    // fire only at first instansiation
+    db.on('onload', (data) => console.log('data:', data));
 
     db.on('set', (e) => console.log('set:', e));
     db.on('delete', (e) => console.log('delete:', e));

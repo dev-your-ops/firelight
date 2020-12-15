@@ -1,14 +1,21 @@
 {
   "name": "@dev-your-ops/firelight",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "repository": "git@github.com:dev-your-ops/firelight.git",
   "author": "marc <marc.nalpas@epitech.eu>",
   "license": "MIT",
+  "scripts": {
+    "test": "node ./node_modules/mocha/bin/mocha"
+  },
   "publishConfig": {
     "access": "public"
   },
   "main": "src/db.js",
   "dependencies": {
     "path": "0.12.7"
+  },
+  "devDependencies": {
+    "mocha": "8.2.1",
+    "expect.js": "0.3.1"
   }
 }
