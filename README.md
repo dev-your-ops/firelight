@@ -105,8 +105,8 @@ you can subsribe to db event to know whats happened with the data and share it b
     // fire only at first instansiation
     db.on('onload', (data) => console.log('data:', data));
 
-    db.on('set', (e) => console.log('set:', e));
-    db.on('delete', (e) => console.log('delete:', e));
+    db.on('set', (e) => console.log('set:', e)); // => {path, data, merge}
+    db.on('delete', (e) => console.log('delete:', e)); // => path
 
 ## live cycle (I guess :$)
 
