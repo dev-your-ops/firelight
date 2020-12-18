@@ -11,15 +11,21 @@ class Ref extends EventEmitter {
   }
 
   set(data, merge = false) {
-    return this.context.set(this.path, data, merge);
+    this.context.set(this.path, data, merge);
+    return this;
   }
 
-  data(childs = false) {
-    return this.context.data(this.path, childs);
+  data() {
+    return this.context.data(this.path);
+  }
+
+  childs() {
+    return this.context.data(this.path, true);
   }
 
   delete() {
-    return this.context.deleteRef(this.path);
+    this.context.deleteRef(this.path);
+    return this;
   }
 }
 
@@ -46,7 +52,24 @@ module.exports = new (class db extends EventEmitter {
       );
     }
     this.emit('onload', this.dbData);
+
+    //==================================================
+    //save before app is close
+    //==================================================
+    process.on('exit', () => this.handleExit());
+    //catches ctrl+c event
+    process.on('SIGINT', () => this.handleExit());
+    // catches "kill pid" (for example: nodemon restart)
+    process.on('SIGUSR1', () => this.handleExit());
+    process.on('SIGUSR2', () => this.handleExit());
+    process.on('SIGTERM', () => this.handleExit());
+    //catches uncaught exceptions
+    process.on('uncaughtException', () => this.handleExit());
+  }
+
+  handleExit() {
     this.save();
+    process.exit();
   }
 
   save() {
@@ -55,7 +78,14 @@ module.exports = new (class db extends EventEmitter {
     }
   }
 
+  slugify(s) {
+    return s.toString().replace(/\//g, '-');
+  }
+
   data(path, childs) {
+    if (!this.dbData) {
+      return;
+    }
     let pathTab = path.split('/').filter((e) => e);
     let res = this.dbData[pathTab[0]];
 
@@ -71,7 +101,11 @@ module.exports = new (class db extends EventEmitter {
         break;
       }
     }
-    return childs ? res : res.data;
+    return !childs
+      ? res.data
+      : res.childs
+      ? Object.keys(res.childs).map((key) => new Ref(this, `${path}/${key}`))
+      : [];
   }
 
   set(path, data, merge) {
@@ -93,7 +127,6 @@ module.exports = new (class db extends EventEmitter {
         ...data,
       };
       this.emit('set', {path, data, merge});
-      this.save();
     }
   }
 
@@ -122,55 +155,6 @@ module.exports = new (class db extends EventEmitter {
         }
       }
     }
-    this.emit('delete', path);
-    this.save();
+    this.emit('deleteRef', path);
   }
 })();
-
-module.set = function (db, path, data, merge = false) {
-  let pathTab = path.split('/').filter((e) => e);
-
-  if (pathTab.length) {
-    if (!db[pathTab[0]]) db[pathTab[0]] = {data: {}, childs: {}};
-
-    let res = db[pathTab[0]];
-
-    for (let i = 1; i < pathTab.length; i++) {
-      if (!res.childs[pathTab[i]])
-        res.childs[pathTab[i]] = {data: {}, childs: {}};
-      res = res.childs[pathTab[i]];
-    }
-
-    res.data = {
-      ...(merge ? res.data : {}),
-      ...data,
-    };
-  }
-
-  return db;
-};
-
-module.delete = function (db, path) {
-  let pathTab = path.split('/').filter((e) => e);
-
-  if (pathTab.length === 1) {
-    delete db[pathTab[0]];
-  } else if (pathTab.length > 1) {
-    let res = db[pathTab[0]];
-
-    for (let i = 1; i < pathTab.length; i++) {
-      if (i === pathTab.length - 1) {
-        delete res.childs[pathTab[i]];
-        break;
-      }
-
-      if (res.childs && res.childs[pathTab[i]]) {
-        res = res.childs[pathTab[i]];
-      } else {
-        break;
-      }
-    }
-  }
-
-  return db;
-};

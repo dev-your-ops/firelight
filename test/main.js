@@ -28,6 +28,18 @@ describe('play with data ref', function () {
     expect(ref.data()).to.eql({test: 'test'});
   });
 
+  it('should add some child and get a childs list', function () {
+    db.ref('/test/2').set({test: 'test'});
+
+    const childs = db.ref('/test').childs();
+
+    expect(childs.length).to.eql(2);
+    expect(childs[0].data()).to.eql({test: 'test'});
+    expect(childs[1].path).to.eql('/test/2');
+
+    db.ref('/test/2').delete();
+  });
+
   it('should update the test child data', function () {
     ref.set({test: 'test updated'}, true);
 
