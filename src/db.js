@@ -131,6 +131,12 @@ module.exports = new (class db extends EventEmitter {
   }
 
   ref(path) {
+    if ((path.match(/\//g) || []).length > 20) {
+      console.error(
+        'FireLight Error: you are trying to get a ref with a path that exceeds the limit of 20 / childs'
+      );
+      process.exit(1);
+    }
     return new Ref(this, path);
   }
 
