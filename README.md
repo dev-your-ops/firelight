@@ -38,17 +38,32 @@ By default, the database file is created at the root of the project with the nam
 >
 > `user.set({lastname: 'doe'}, true); // user.data() = {firstname: 'john', lastname: 'doe'}`
 
-#### _get ref data_
+#### _access data_
 
-You can access the data by using the association function.
+You can access to the ref data by using the association function:
 
-`const userData = user.data()`
+    const userData = user.data()
+
+    console.log(userData) // => {firstname: 'john'}
 
 #### _get ref childs_
 
 You have access to all the children of a ref.
 
-`const userChilds = db.ref('/users').childs()`
+    const userChilds = db.ref('/users').childs()
+
+    console.log(userChilds) // => [Ref,...]
+    console.log(userChilds[0].data()) // => {firstname: 'john'}
+
+#### _delete ref_
+
+if you want to remove a ref and ALL OF THESE CHILDREN.
+
+    // only a user
+    db.ref('/users/1').delete()
+
+    // all users
+    db.ref('/users').delete()
 
 #### _Example_
 
@@ -99,6 +114,8 @@ the **db** object:
 | deleteRef(**_path_**) | `Function` | Delete the space on the db at the gived **_path_**.                       |
 | load()                | `Function` | Read the file from the dbPath location an load it into dbData             |
 | save()                | `Function` | Write the stringified data in the json db file.                           |
+| slugify(**_str_**)    | `Function` | Replace all '/' by '-' in **_str_**                                       |
+| UID()                 | `Function` | return a uuid as xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx                     |
 | dbData                | `Object`   | Is an object with containe the bd json file parsed.                       |
 | dbPath                | `String`   | The file path to save the data from thedatabasedata.                      |
 
